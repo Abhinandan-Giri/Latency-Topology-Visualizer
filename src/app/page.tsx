@@ -16,7 +16,7 @@ const Globe = dynamic(() => import('@/components/Globe'), {
 });
 
 export default function Home() {
-  const { latencyData, isConnected } = useLatencyData();
+  const { isConnected } = useLatencyData();
   const [showChart, setShowChart] = useState(false);
   const [filteredProviders, setFilteredProviders] = useState<string[]>(['AWS', 'GCP', 'Azure']);
   const [latencyRange, setLatencyRange] = useState<[number, number]>([0, 500]);

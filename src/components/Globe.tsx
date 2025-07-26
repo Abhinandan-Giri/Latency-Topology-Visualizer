@@ -1,8 +1,8 @@
 // src/components/Globe.tsx
 'use client';
 
-import React, { useRef, useState, useEffect, useMemo } from 'react';
-import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+import React, { useMemo } from 'react';
+import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
 import * as THREE from 'three';
 import ExchangeMarker from './ExchangeMarker';
@@ -28,7 +28,7 @@ const Globe: React.FC<GlobeProps> = ({
   searchQuery,
   enabledLayers
 }) => {
-  const { latencyData, isConnected } = useLatencyData();
+  const { latencyData } = useLatencyData();
   
   // Load Earth texture
   const earthTexture = useMemo(() => {

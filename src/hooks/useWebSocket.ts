@@ -1,9 +1,9 @@
 // src/hooks/useWebSocket.ts
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 interface UseWebSocketOptions {
   url: string;
-  onMessage?: (data: any) => void;
+  onMessage?: (data: unknown) => void;
   onError?: (error: Event) => void;
   reconnectAttempts?: number;
   reconnectInterval?: number;
@@ -21,7 +21,7 @@ export const useWebSocket = ({
   const ws = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
-  const connect = () => {
+  const connect = useCallback(() => {
     try {
       ws.current = new WebSocket(url);
 
@@ -57,9 +57,9 @@ export const useWebSocket = ({
     } catch (error) {
       console.error('WebSocket connection failed:', error);
     }
-  };
+  }, [url, onMessage, onError, reconnectAttempts, reconnectInterval, connectionAttempts]);
 
-  const sendMessage = (message: any) => {
+  const sendMessage = (message: unknown) => {
     if (ws.current?.readyState === WebSocket.OPEN) {
       ws.current.send(JSON.stringify(message));
     }
@@ -76,7 +76,7 @@ export const useWebSocket = ({
         ws.current.close();
       }
     };
-  }, [url]);
+  }, [connect]);
 
   return { isConnected, sendMessage };
 };
