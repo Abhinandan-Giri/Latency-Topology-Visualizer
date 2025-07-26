@@ -19,6 +19,13 @@ export default function Home() {
   const { latencyData, isConnected } = useLatencyData();
   const [showChart, setShowChart] = useState(false);
   const [filteredProviders, setFilteredProviders] = useState<string[]>(['AWS', 'GCP', 'Azure']);
+  const [latencyRange, setLatencyRange] = useState<[number, number]>([0, 500]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [enabledLayers, setEnabledLayers] = useState({
+    realtime: true,
+    regions: true,
+    heatmap: true
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
@@ -50,16 +57,26 @@ export default function Home() {
       <main className="relative h-screen overflow-hidden">
         <ErrorBoundary>
           <Suspense fallback={<LoadingSpinner message="Initializing 3D Globe..." />}>
-            <Globe />
+            <Globe 
+              filteredProviders={filteredProviders}
+              latencyRange={latencyRange}
+              searchQuery={searchQuery}
+              enabledLayers={enabledLayers}
+            />
           </Suspense>
         </ErrorBoundary>
 
         {/* Control Panel */}
         <ControlPanel
           onProviderFilter={setFilteredProviders}
-          onLatencyFilter={(range) => console.log('Latency filter:', range)}
-          onExchangeSearch={(query) => console.log('Search:', query)}
-          onToggleLayer={(layer, enabled) => console.log('Toggle layer:', layer, enabled)}
+          onLatencyFilter={setLatencyRange}
+          onExchangeSearch={setSearchQuery}
+          onToggleLayer={(layer, enabled) => {
+            setEnabledLayers(prev => ({
+              ...prev,
+              [layer]: enabled
+            }));
+          }}
         />
 
         {/* Historical Chart Panel */}

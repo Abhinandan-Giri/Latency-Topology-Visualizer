@@ -58,9 +58,9 @@ const LatencyLine: React.FC<LatencyLineProps> = ({ from, to, latencyMs }) => {
     }
   });
 
-  return (
-    <line ref={lineRef} geometry={geometry} material={material} />
-  );
+  const line = useMemo(() => new THREE.Line(geometry, material), [geometry, material]);
+
+  return <primitive object={line} ref={lineRef} />;
 };
 
 export default LatencyLine;
